@@ -81,9 +81,13 @@ pipeline {
                     sh '''
                         rm -rf gitops
 
-                        git clone https://github.com/vaibhav-repository/gitops-main.git gitops
+                        git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/vaibhav-repository/gitops-main.git gitops
 
-                        cd gitops/nodejs-app
+                        cd gitops
+
+                        git checkout -b image-update-${IMAGE_TAG}
+
+                        cd nodejs-app
 
                         sed -i 's/^  tag:.*/  tag: "'${IMAGE_TAG}'"/' values.yaml
 
@@ -91,9 +95,10 @@ pipeline {
                         git config user.email "jenkins@example.com"
 
                         git add values.yaml
-                        git commit -m "Update nodejs-app image to ${IMAGE_TAG}" || true
 
-                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/vaibhav-repository/gitops-main.git HEAD:main
+                        git commit -m "Update nodejs-app image to ${IMAGE_TAG}"
+
+                        git push origin image-update-${IMAGE_TAG}
                     '''
                 }
             }
