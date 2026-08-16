@@ -103,5 +103,25 @@ pipeline {
                 }
             }
         }
+
+        stage('Create Pull Request') {
+            steps {
+                withCredentials([
+                    string(
+                        credentialsId: 'github-token',
+                        variable: 'GH_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        gh pr create \
+                            --repo vaibhav-repository/gitops-main \
+                            --base main \
+                            --head image-update-${IMAGE_TAG} \
+                            --title "Update nodejs-app image to ${IMAGE_TAG}" \
+                            --body "Jenkins updated the Node.js application image to ${IMAGE_TAG}."
+                    '''
+                }
+            }
+        }
     }
 }
