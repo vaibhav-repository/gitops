@@ -1,10 +1,10 @@
 {
-  "name": "nodejs-eks-demo",
+  "name": "nodejs-app",
   "version": "1.0.0",
-  "description": "Node.js application for Docker, Jenkins, ECR and EKS",
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "test": "node --test"
   },
   "dependencies": {
     "express": "^5.1.0"
