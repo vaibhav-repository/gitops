@@ -5,12 +5,12 @@ pipeline {
     environment {
         AWS_REGION = 'ap-south-1'
 
-        ECR_REPO = '123456789012.dkr.ecr.ap-south-1.amazonaws.com/nodejs-app'
+        ECR_REPO = '255834079384.dkr.ecr.ap-south-1.amazonaws.com/production/gitops-repo'
 
         IMAGE_TAG = "${BUILD_NUMBER}"
         IMAGE = "${ECR_REPO}:${IMAGE_TAG}"
 
-        GITOPS_REPO = 'https://github.com/your-user/your-gitops-repo.git'
+        GITOPS_REPO = 'https://github.com/vaibhav-repository/gitops-main.git'
     }
 
     stages {
