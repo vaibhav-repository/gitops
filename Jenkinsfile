@@ -71,25 +71,31 @@ pipeline {
 
         stage('Update Helm Values') {
             steps {
-                sh '''
-                    rm -rf gitops
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'new-git-cred',
+                        usernameVariable: 'GIT_USERNAME',
+                        passwordVariable: 'GIT_PASSWORD'
+                    )
+                ]) {
+                    sh '''
+                        rm -rf gitops
 
-                    git clone ${GITOPS_REPO} gitops
+                        git clone https://github.com/vaibhav-repository/gitops-main.git gitops
 
-                    cd gitops/nodejs-app
+                        cd gitops/nodejs-app
 
-                    sed -i "s/^  tag:.*/  tag: \\"${IMAGE_TAG}\\"/" values.yaml
+                        sed -i 's/^  tag:.*/  tag: "'${IMAGE_TAG}'"/' values.yaml
 
-                    git config user.name "Jenkins"
-                    git config user.email "jenkins@example.com"
+                        git config user.name "Jenkins"
+                        git config user.email "jenkins@example.com"
 
-                    git add values.yaml
+                        git add values.yaml
+                        git commit -m "Update nodejs-app image to ${IMAGE_TAG}" || true
 
-                    git commit \
-                    -m "Update nodejs-app image to ${IMAGE_TAG}" || true
-
-                    git push origin main
-                '''
+                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/vaibhav-repository/gitops-main.git HEAD:main
+                    '''
+                }
             }
         }
     }
